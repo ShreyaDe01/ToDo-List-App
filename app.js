@@ -8,7 +8,8 @@ app.use(express.static('public'))
 const mongoose = require("mongoose")
 mongoose.connect("mongodb://localhost:27017/todo")
 const trySchema = new mongoose.Schema({
-    name : String
+    name : String,
+    date: String
 })
 
 const item = mongoose.model("task", trySchema)
@@ -19,11 +20,12 @@ const item = mongoose.model("task", trySchema)
 app.post("/", function(req, res){
     const itemName = req.body.item1;
     const todo = new item({
-        name: itemName
+        name: itemName,
+        date: new Date().toDateString()
     })
     todo.save()
     res.redirect("/")
-    preventDefault();
+    
 })
 
 app.post("/delete", function(req, res){
@@ -35,6 +37,10 @@ app.post("/delete", function(req, res){
         }
     })
 })
+const currentDate = new Date();
+const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+
+var date = currentDate.toLocaleDateString('en-in', options)
 
 app.get("/", function(req, res){
     item.find({}, function(err, foundItems){
@@ -43,11 +49,13 @@ app.get("/", function(req, res){
         }
         else{
             console.log("Task added!")
-            res.render("list", {ejes : foundItems})
+            res.render("list", {
+                currentDate: date,
+                ejes : foundItems})
         }
     })
 })
 
 app.listen("3000", function(){
-    console.log("Server is running...")
+    console.log("Server is running on port 3000...")
 })
