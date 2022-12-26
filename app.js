@@ -27,6 +27,7 @@ app.post("/", function(req, res){
         date: new Date().toDateString()
     })
     todo.save()
+    console.log("Task added!")
     res.redirect("/")
     
 })
@@ -51,7 +52,6 @@ app.get("/", function(req, res){
             console.log(err)
         }
         else{
-            console.log("Task added!")
             res.render("list", {
                 currentDate: date,
                 ejes : foundItems})
